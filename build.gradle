@@ -1,0 +1,71 @@
+/*
+ * Copyright (C) 2020 Baidu, Inc. All Rights Reserved.
+ */
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+
+    }
+}
+
+// ./gradlew -q groupTask 执行任务
+// ./gradlew -q tasks 列出所有的任务列表
+// ./gradlew groupTask -x task0 可以排除task0
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+// 通过 gradle -q startSession 可以执行此任务
+task startSession() {
+    doFirst{
+        println "startSession"
+    }
+    println "session process"
+    //表示是此任务执行的最后一个action,此前版本也可以使用<<来简化
+    doLast {
+        chat()
+    }
+}
+
+def chat()  {
+    println "session finished"
+    ant.echo(message: 'all over')
+}
+
+// 循环定义task
+3.times {
+    task "task$it" {
+        println("task($it)-----")
+    }
+}
+
+
+//定义任务依赖关系
+task0.dependsOn startSession
+task1.dependsOn task2,task0
+
+task groupTask(dependsOn:task1){
+    println("groupTask")
+}
+
+
