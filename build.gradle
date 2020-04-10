@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 /*
  * Copyright (C) 2020 Baidu, Inc. All Rights Reserved.
  */
@@ -12,6 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -60,12 +63,30 @@ def chat()  {
 }
 
 
-//定义任务依赖关系
+//定义任务依赖关系,gradle不能保证task依赖的执行顺序，只是定义了依赖需要执行
 task0.dependsOn startSession
 task1.dependsOn task2,task0
 
+String version = "1.1"
+
+
+task printCompileTime(){
+    String now = new Date().format("yyyy/MM/dd HH:mm:ss")
+    println("comile time:$now")
+}
+
+
 task groupTask(dependsOn:task1){
     println("groupTask")
+    logger.quiet("version: $version")
 }
+
+
+
+//ext.versionFile = file('version.properties')
+//
+//task loadVersion{
+//    project.version = readVersion()
+//}
 
 
